@@ -17,6 +17,8 @@
  */
 package com.grokkingandroid.sampleapp.samples.gcm.ccs.server;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ConnectionListener;
@@ -480,7 +482,8 @@ public class CcsClient {
         // Send a sample hello downstream message to a device.
         String messageId = ccsClient.getRandomMessageId();
         Map<String, String> payload = new HashMap<String, String>();
-        payload.put("SERVER_MESSAGE", "TESTANDO 1,2,3...");
+        String newString = new SimpleDateFormat("H:mm:ss").format(new Date());
+        payload.put("SERVER_MESSAGE", "TESTE=" + newString);
         String collapseKey = "sample";
         Long timeToLive = 10000L;
         Boolean delayWhileIdle = true;
