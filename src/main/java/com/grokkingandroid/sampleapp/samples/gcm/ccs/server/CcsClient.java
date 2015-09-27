@@ -17,8 +17,6 @@
  */
 package com.grokkingandroid.sampleapp.samples.gcm.ccs.server;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ConnectionListener;
@@ -42,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -216,8 +213,8 @@ public class CcsClient {
      * Handles an upstream data message from a device application.
      */
     public void handleIncomingDataMessage(CcsMessage msg) {
-        if (msg.getPayload().get("action") != null) {
-            PayloadProcessor processor = ProcessorFactory.getProcessor(msg.getPayload().get("action"));
+        if (msg.getPayload().get("ACTION") != null) {
+            PayloadProcessor processor = ProcessorFactory.getProcessor(msg.getPayload().get("ACTION"));
             processor.handleMessage(msg);
         }   
     }
@@ -402,11 +399,12 @@ public class CcsClient {
 
             @Override
             public void processPacket(Packet packet) {
-                logger.log(Level.INFO, "Received: " + packet.toXML());
+                logger.log(Level.INFO, "Received []: " + packet.toXML());
                 Message incomingMessage = (Message) packet;
                 GcmPacketExtension gcmPacket
                         = (GcmPacketExtension) incomingMessage.getExtension(GCM_NAMESPACE);
                 String json = gcmPacket.getJson();
+                logger.log(Level.INFO, "json []: " + json);
                 try {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> jsonMap
@@ -436,6 +434,7 @@ public class CcsClient {
     private void handleMessage(Map<String, Object> jsonMap) {
         // present for "ack"/"nack", null otherwise
         Object messageType = jsonMap.get("message_type");
+        logger.log(Level.INFO, "messageType []: " + jsonMap);
 
         if (messageType == null) {
             CcsMessage msg = getMessage(jsonMap);
@@ -464,30 +463,14 @@ public class CcsClient {
     }
 
     private static final String CHAVE_API = "AIzaSyC3mluaIT8sbdXpJCgf-s_SUkRKTEmpCgg";
-    private static final String REGISTRO_ID_DEVICE = "APA91bEO6VXRVVckexwLZLOMdb_XSX19UDJ45DCkMpTm2Ilh_CnwAOXOOIjlqj0VTm9FtRSXW6d1swBB0D9XTfxKNCL0jyNyLIdLkZKmOG3QeByblJ9bDLsEQ07mXCugRGTi9web1z8J";
+    private static final String PROJECT_ID = "779755635636";
     
     public static void main(String[] args) {
-        final String projectId = "779755635636";
-        final String password = CHAVE_API;
-        final String toRegId = REGISTRO_ID_DEVICE;
-
-        CcsClient ccsClient = CcsClient.prepareClient(projectId, password, true);
-
+        CcsClient ccsClient = CcsClient.prepareClient(PROJECT_ID, CHAVE_API, true);
         try {
             ccsClient.connect();
         } catch (XMPPException e) {
             e.printStackTrace();
         }
-
-        // Send a sample hello downstream message to a device.
-        String messageId = ccsClient.getRandomMessageId();
-        Map<String, String> payload = new HashMap<String, String>();
-        String newString = new SimpleDateFormat("H:mm:ss").format(new Date());
-        payload.put("SERVER_MESSAGE", "TESTE=" + newString);
-        String collapseKey = "sample";
-        Long timeToLive = 10000L;
-        Boolean delayWhileIdle = true;
-        ccsClient.send(createJsonMessage(toRegId, messageId, payload, collapseKey,
-                timeToLive, delayWhileIdle));
     }
 }

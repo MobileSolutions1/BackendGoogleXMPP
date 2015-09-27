@@ -18,10 +18,12 @@ package com.grokkingandroid.sampleapp.samples.gcm.ccs.server;
 
 public class ProcessorFactory {
 
-    private static final String PACKAGE = "com.grokkingandroid.sampleapp.samples.gcm";
-    private static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
-    private static final String ACTION_ECHO = PACKAGE + ".ECHO";
-    private static final String ACTION_MESSAGE = PACKAGE + ".MESSAGE";
+    private static final String ACTION_REGISTER = "REGISTER";
+    private static final String ACTION_ECHO = "ECHO";
+    private static final String ACTION_MESSAGE = "MESSAGE";
+    private static final String ACTION_USER_LIST = "USERLIST";
+    private static final String ACTION_SIGNUP = "SIGNUP";
+    private static final String ACTION_CHAT = "CHAT";
 
     public static PayloadProcessor getProcessor(String action) {
         if (action == null) {
@@ -30,9 +32,18 @@ public class ProcessorFactory {
         if (action.equals(ACTION_REGISTER)) {
             return new RegisterProcessor();
         }
+        if (action.equals(ACTION_USER_LIST)) {
+            return new UserListProcessor();
+        }        
+        if (action.equals(ACTION_SIGNUP)) {
+            return new UserSignup();
+        }        
         else if (action.equals(ACTION_ECHO)) {
             return new EchoProcessor();
         }
+        else if (action.equals(ACTION_CHAT)) {
+            return new ChatProcessor();
+        }        
         else if (action.equals(ACTION_MESSAGE)) {
             return new MessageProcessor();
         }
