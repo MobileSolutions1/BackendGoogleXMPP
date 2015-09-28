@@ -24,28 +24,27 @@ public class ProcessorFactory {
     private static final String ACTION_USER_LIST = "USERLIST";
     private static final String ACTION_SIGNUP = "SIGNUP";
     private static final String ACTION_CHAT = "CHAT";
-
+    private static final String ACTION_KEY_PRESS = "KEYPRESS";
+    
     public static PayloadProcessor getProcessor(String action) {
         if (action == null) {
             throw new IllegalStateException("action must not be null");
         }
-        if (action.equals(ACTION_REGISTER)) {
-            return new RegisterProcessor();
-        }
-        if (action.equals(ACTION_USER_LIST)) {
-            return new UserListProcessor();
-        }        
-        if (action.equals(ACTION_SIGNUP)) {
-            return new UserSignup();
-        }        
-        else if (action.equals(ACTION_ECHO)) {
-            return new EchoProcessor();
-        }
-        else if (action.equals(ACTION_CHAT)) {
-            return new ChatProcessor();
-        }        
-        else if (action.equals(ACTION_MESSAGE)) {
-            return new MessageProcessor();
+        switch (action) {
+            case ACTION_REGISTER:
+                return new RegisterProcessor();
+            case ACTION_USER_LIST:
+                return new UserListProcessor();
+            case ACTION_SIGNUP:
+                return new UserSignup();
+            case ACTION_ECHO:
+                return new EchoProcessor();
+            case ACTION_CHAT:
+                return new ChatProcessor();
+            case ACTION_KEY_PRESS:
+                return new UserKeyPressProcessor();
+            case ACTION_MESSAGE:
+                return new MessageProcessor();
         }
         throw new IllegalStateException("Action " + action + " is unknown");
     }
