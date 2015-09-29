@@ -262,7 +262,10 @@ public class CcsClient {
      */
     public void handleNackReceipt(Map<String, Object> jsonObject) {
         String messageId = jsonObject.get("message_id").toString();
-        String from = jsonObject.get("from").toString();
+        String from = "";
+        if(jsonObject.get("from") != null) {
+            jsonObject.get("from").toString();
+        }
         logger.log(Level.INFO, "handleNackReceipt() from: " + from + ", messageId: " + messageId);
     }
 
